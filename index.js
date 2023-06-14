@@ -57,6 +57,7 @@ async function run() {
       res.send(result)
     })
     app.get('/myClass', async (req, res) => {
+    
       const result = await classCollection.find().toArray();
       res.send(result);
     })
@@ -92,7 +93,12 @@ async function run() {
     
 
     app.get('/dashboard/myclass', async (req, res) => {
-      const result = await classCollection.find().toArray();
+      const email = req.query.email;
+      if(!email){
+        res.send([])
+      }
+      const query = {'instructors.email':email};
+      const result = await classCollection.find(query).toArray();
       res.send(result)
     })
     app.get('/dashboard/allclasses', async (req, res) => {
@@ -101,7 +107,7 @@ async function run() {
     })
 
 
-    app.get('/users',verifyJWT,verifyAdmin, async (req, res) => {
+    app.get('/users',verifyAdmin, async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result)
     })
@@ -115,13 +121,16 @@ async function run() {
       const result = {admin:user?.role==='admin'};
       res.send(result)
     })
-    app.get('/users/instructors/:email', async (req, res) => {
-      const email = req.params.email;
-      const query = {email:email}
-      const user = await userCollection.find(query)
-      const result = {instructors:user?.role==='instructors'};
-      res.send(result)
-    })
+
+
+
+    // app.get('/users/instructors/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const query = {email:email}
+    //   const user = await userCollection.filter(query)
+    //   const result = {instructors:user?.role==='instructors'};
+    //   res.send(result)
+    // })
 
     app.post('/users', async (req, res) => {
       const user = req.body;
