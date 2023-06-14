@@ -60,6 +60,11 @@ async function run() {
       const result = await classCollection.find().toArray();
       res.send(result);
     })
+    app.get('/popularclass', async (req, res) => {
+    
+      const result = await classCollection.find().toArray();
+      res.send(result);
+    })
 
     app.post('/jwt', (req, res) => {
       const user = req.body;
